@@ -1,0 +1,4 @@
+cp_inicio,cp_fin,zona,tarifa_sobre,tarifa_paquete_kg
+00000,19999,local,50,30
+20000,49999,regional,80,40
+50000,99999,nacional,120,55
