@@ -1,4 +1,3 @@
-
 from threading import RLock
 
 
@@ -27,11 +26,12 @@ class Vehiculo:
 
     def verificar_capacidad(self, peso_total):
         """Comprueba que la carga no supere la capacidad del vehículo."""
-        if isinstance(peso_total, bool) or not isinstance(peso_total, (int, float)):
-            raise ValueError("El peso debe ser numérico.")
-
-        if peso_total < 0:
-            raise ValueError("El peso no puede ser negativo.")
+        if (
+            isinstance(peso_total, bool)
+            or not isinstance(peso_total, (int, float))
+            or peso_total < 0
+        ):
+            raise ValueError("El peso debe ser numérico y no negativo.")
 
         return peso_total <= self.capacidad_maxima
 
@@ -57,30 +57,37 @@ class Repartidor:
         self._lock = RLock()
 
     def _obtener_peso(self, envio):
-        """Obtiene el peso real del envío para calcular la carga física."""
+        """Obtiene el peso físico del envío."""
         if hasattr(envio, "peso_real"):
             peso = envio.peso_real
         elif hasattr(envio, "peso"):
             peso = envio.peso
         else:
-            raise ValueError("El envío no tiene un atributo de peso real.")
+            raise ValueError(
+                "El envío no tiene un peso físico definido."
+            )
 
-        if isinstance(peso, bool) or not isinstance(peso, (int, float)):
-            raise ValueError("El peso del envío debe ser numérico.")
-
-        if peso <= 0:
-            raise ValueError("El peso del envío debe ser mayor que cero.")
+        if (
+            isinstance(peso, bool)
+            or not isinstance(peso, (int, float))
+            or peso <= 0
+        ):
+            raise ValueError(
+                "El peso del envío debe ser numérico y mayor que cero."
+            )
 
         return peso
 
     def asignar_envio(self, envio):
-        """Asigna un envío en almacén sin superar la capacidad del vehículo."""
+        """Asigna un envío en almacén sin superar la capacidad."""
         if envio is None:
             raise ValueError("No se puede asignar un envío vacío.")
 
         with self._lock:
             if envio in self.envios_asignados:
-                raise ValueError("El envío ya está asignado a este repartidor.")
+                raise ValueError(
+                    "El envío ya está asignado a este repartidor."
+                )
 
             guia = getattr(envio, "numero_guia", None)
 
@@ -97,7 +104,9 @@ class Repartidor:
             estado = estado.strip().lower().replace("_", " ")
 
             if estado not in ("en almacen", "en almacén"):
-                raise ValueError("Solo se pueden asignar envíos en almacén.")
+                raise ValueError(
+                    "Solo se pueden asignar envíos en almacén."
+                )
 
             peso = self._obtener_peso(envio)
             nueva_carga = self.calcular_carga() + peso
@@ -113,7 +122,7 @@ class Repartidor:
             return True
 
     def calcular_carga(self):
-        """Calcula el peso real total de los envíos asignados."""
+        """Calcula el peso físico total de los envíos asignados."""
         with self._lock:
             return sum(
                 self._obtener_peso(envio)
