@@ -1,0 +1,6 @@
+﻿tipo_envio,numero_guia,remitente,destinatario,codigo_postal,tipo_servicio,peso,largo,ancho,alto,valor_declarado,estado
+sobre,GEX101,Empresa A,Ana Lopez,01000,estandar,,,,,,registrado
+paquete,GEX102,Empresa B,Carlos Ruiz,14000,express,2.5,20,15,10,,registrado
+paquetefragil,GEX103,Empresa C,Laura Diaz,30000,estandar,2,10,10,10,500,registrado
+paqueterefrigerado,GEX104,Empresa D,Pedro Soto,30000,express,2,10,10,10,,registrado
+paquete,GEX105,Empresa E,Maria Torres,55000,estandar,4,20,15,10,,registrado
