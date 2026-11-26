@@ -12,3 +12,12 @@ venv/
 # Archivos temporales
 *.log
 *.tmp
+
+# Caché de pruebas
+.pytest_cache/
+
+# Archivos generados durante la ejecución
+datos/envios.json
+datos/repartidores.json
+datos/historiales.json
+reportes/

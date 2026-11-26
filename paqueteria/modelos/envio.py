@@ -124,7 +124,8 @@ class Sobre(Envio):
         zona,
         tipo_servicio,
         estado="registrado",
-        remitente=""
+        remitente="",
+        peso=None
     ):
         super().__init__(
             numero_guia,
@@ -135,7 +136,31 @@ class Sobre(Envio):
             estado,
             remitente
         )
+
+        self.peso = None
+        self.peso_real = None
+
+        if peso is not None:
+            self.establecer_peso_fisico(peso)
+
         self.validar()
+
+    def establecer_peso_fisico(self, peso):
+        """Registra y valida el peso físico del sobre."""
+
+        if isinstance(peso, bool):
+            raise ValueError("El peso del sobre debe ser un número válido.")
+
+        try:
+            numero = float(peso)
+        except (TypeError, ValueError):
+            raise ValueError("El peso del sobre debe ser un número válido.")
+
+        if not math.isfinite(numero) or numero <= 0:
+            raise ValueError("El peso del sobre debe ser mayor que cero.")
+
+        self.peso = numero
+        self.peso_real = numero
 
     def calcular_costo(self, tarifas):
         """Calcula la tarifa fija del sobre según su zona."""
